@@ -143,8 +143,8 @@ def process_pdf(input_pdf_bytes, notes_style, notes_text, font_name, color, spac
 
 
 # Main UI layout
-st.set_page_config(page_title="PDF with Notes Section")
-st.title("📄 Add Notes to Your PDFs")
+st.set_page_config(page_title="PDF with Notes Section 📝",page_icon="📝")
+st.title("📝 Add Notes to Your PDFs")
 
 # Customization Section
 st.markdown("<hr>", unsafe_allow_html=True)
@@ -162,7 +162,7 @@ def update_text_color():
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown("### 📝 Note Page Style")
+    st.markdown("### 📃 Note Page Style")
 
     style_choice = st.radio(
         "Style:",
@@ -228,7 +228,7 @@ spacing = 20
 st.markdown("<hr>", unsafe_allow_html=True)
 
 # File Upload Section
-st.markdown("### 📄 Upload PDF Files")
+st.markdown("### 📤 Upload PDF Files")
 uploaded_files = st.file_uploader("Choose PDF files", type="pdf", accept_multiple_files=True)
 
 if uploaded_files:
