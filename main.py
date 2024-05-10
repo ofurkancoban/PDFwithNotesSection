@@ -144,7 +144,7 @@ def process_pdf(input_pdf_bytes, notes_style, notes_text, font_name, color, spac
 
 # Main UI layout
 st.set_page_config(page_title="PDF with Notes Section")
-st.title("📄 Add Note Section to Your PDF")
+st.title("📄 Add Notes to Your PDFs")
 
 # Customization Section
 st.markdown("<hr>", unsafe_allow_html=True)
@@ -175,11 +175,11 @@ with col1:
     # Display images using HTML
     st.markdown(
         """
-        <div style="display: flex; justify-content: space-around; margin-top: -20px;">
-            <img src="grid.png" width="50" style="pointer-events: none;">
-            <img src="lined.png" width="50" style="pointer-events: none;">
-            <img src="dotted.png" width="50" style="pointer-events: none;">
-            <img src="blank.png" width="50" style="pointer-events: none;">
+        <div style="display: flex; justify-content: space-around; margin-top: -5px;margin-left: -15px;padding: 0 0 15px 0px">
+            <img src="https://github.com/ofurkancoban/PDFwithNotesSection/blob/master/img/grid.png?raw=true " width="60" style="pointer-events: none;">
+            <img src="https://github.com/ofurkancoban/PDFwithNotesSection/blob/master/img/lined.png?raw=true" width="60" style="pointer-events: none;">
+            <img src="https://github.com/ofurkancoban/PDFwithNotesSection/blob/master/img/dotted.png?raw=true" width="60" style="pointer-events: none;">
+            <img src="https://github.com/ofurkancoban/PDFwithNotesSection/blob/master/img/blank.png?raw=true" width="60" style="pointer-events: none;">
         </div>
         """, unsafe_allow_html=True
     )
