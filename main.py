@@ -147,13 +147,6 @@ st.set_page_config(page_title="PDF with Notes Section 📝",page_icon="📝")
 # Initialize Streamlit application
 st.markdown('<div style="text-align: center;font-size:300%;margin-bottom: 40px"><b>PDF with Notes Section 📝</b></div>', unsafe_allow_html=True)
 
-# Social media information
-icons = {
-    "GitHub": "https://raw.githubusercontent.com/ofurkancoban/xml2csv/master/img/github.png",  # Replace with your GitHub icon or URL
-    "LinkedIn": "https://raw.githubusercontent.com/ofurkancoban/xml2csv/master/img/linkedin-in.png",  # Replace with your LinkedIn icon or URL
-    "Kaggle": "https://raw.githubusercontent.com/ofurkancoban/xml2csv/master/img/kaggle.png"  # Replace with your Kaggle icon or URL
-}
-
 # Display images using HTML
 st.markdown(
     """
