@@ -17,7 +17,7 @@ This project allows users to upload PDF files, select the style of the notes sec
 **Getting Started**
 
 1. Clone this repository: `git clone https://github.com/ofurkancoban/PDFwithNotesSection.git`
-2. Install dependencies: `pip install -r requirements.txt` (Streamlit, Pillow)
+2. Install dependencies: `pip install -r requirements.txt` 
 3. Run the application: `streamlit run main.py`
 
 **Usage**
