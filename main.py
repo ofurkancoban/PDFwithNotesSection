@@ -154,18 +154,16 @@ icons = {
     "Kaggle": "https://raw.githubusercontent.com/ofurkancoban/xml2csv/master/img/kaggle.png"  # Replace with your Kaggle icon or URL
 }
 
-urls = [
-    "https://github.com/ofurkancoban",
-    "https://www.linkedin.com/in/ofurkancoban",
-    "https://www.kaggle.com/ofurkancoban"
-]
-
-# Centering the icons
-cols = st.columns([1, 1, 1, 1])
-icon_cols = [cols[1], cols[2], cols[3]]  # Pick the middle columns for icons
-for col, (name, icon_path), url in zip(icon_cols, icons.items(), urls):
-    with col:
-        st.markdown(f"<a href='{url}' target='_blank'><img src='{icon_path}' width='30'></a>", unsafe_allow_html=True)
+# Display images using HTML
+st.markdown(
+    """
+    <div style="display: flex; justify-content: space-around; padding: 0 0 10px 0px">
+        <a href="https://github.com/ofurkancoban"><img href ="https://github.com/ofurkancoban" src="https://raw.githubusercontent.com/ofurkancoban/xml2csv/master/img/github.png" width="30" style="pointer-events: none;"></a>
+        <a href="https://www.linkedin.com/in/ofurkancoban"><img src="https://raw.githubusercontent.com/ofurkancoban/xml2csv/master/img/linkedin-in.png" width="30" style="pointer-events: none;"></a>
+        <a href="https://www.kaggle.com/ofurkancoban"><img src="https://raw.githubusercontent.com/ofurkancoban/xml2csv/master/img/kaggle.png" width="30" style="pointer-events: none;"></a>
+    </div>
+    """, unsafe_allow_html=True
+)
 
 # Customization Section
 st.markdown("<hr>", unsafe_allow_html=True)
@@ -183,7 +181,9 @@ def update_text_color():
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown("### 📃 Note Page Style")
+    st.markdown(
+        '<div style="text-align: left;font-size:170%;margin-bottom: 10px"><b>📃 Note Page Style</b></div>',
+        unsafe_allow_html=True)
 
     style_choice = st.radio(
         "Style:",
@@ -226,7 +226,9 @@ with col1:
         )
 
 with col2:
-    st.markdown("### 🎨 Page Position and Fonts")
+    st.markdown(
+        '<div style="text-align: left;font-size:170%;margin-bottom: 10px"><b>🎨 Page Position and Fonts</b></div>',
+        unsafe_allow_html=True)
     position = st.radio(
         "Position of Notes Section",
         ["Right", "Left", "Top", "Bottom"],
@@ -249,7 +251,9 @@ spacing = 20
 st.markdown("<hr>", unsafe_allow_html=True)
 
 # File Upload Section
-st.markdown("### 📤 Upload PDF Files")
+st.markdown(
+        '<div style="text-align: center;font-size:170%;margin-bottom: 10px"><b>📤 Upload PDF Files</b></div>',
+        unsafe_allow_html=True)
 uploaded_files = st.file_uploader("Choose PDF files", type="pdf", accept_multiple_files=True)
 
 if uploaded_files:
@@ -260,8 +264,10 @@ if uploaded_files:
     file_counter = st.empty()
     st.markdown("<hr>", unsafe_allow_html=True)
     # Process PDF and display
-    st.markdown("### 🛠 Process PDFs")
-    if st.button("⚙️ Start to Add Notes Section to PDFs ⚙️", use_container_width=True):
+    st.markdown(
+        '<div style="text-align: center;font-size:170%;margin-bottom: 10px"><b>🛠 Process PDFs</b></div>',
+        unsafe_allow_html=True)
+    if st.button("🖨️ START 🖨️", use_container_width=True):
         processed_files = []
         for i, uploaded_file in enumerate(uploaded_files):
             with st.spinner(f"Processing {uploaded_file.name}..."):
@@ -274,7 +280,7 @@ if uploaded_files:
                 # Display download button for the completed file
                 col1, col2 = st.columns([3, 1])
                 with col1:
-                    st.write(f"➔ {i + 1} -  {uploaded_file.name}")
+                    st.write(f"➔ {i + 1} -  {uploaded_file.name}   ✅")
                 with col2:
                     st.download_button(
                         label="Download",
