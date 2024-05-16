@@ -1,4 +1,4 @@
-<img src="https://github.com/ofurkancoban/PDFwithNotesSection/blob/master/img/img.png" alt="xml2csv" style="max-width: 100%;">
+![xml2csv](https://github.com/ofurkancoban/PDFwithNotesSection/blob/master/img/img.png)
 
 **PDF with Notes Section**
 A simple web-based application to add notes sections to PDF files using Streamlit.
