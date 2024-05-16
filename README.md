@@ -35,6 +35,10 @@ This project allows users to upload PDF files, select the style of the notes sec
 * The application is built using Python 3.x
 * It utilizes Pillow for image processing
 
+**Credits**
+
+* Streamlit PDF Viewer: https://github.com/lfoppiano/streamlit-pdf-viewer
+
 **Contributing**
 
 This project is open-source, and contributions are welcome! If you'd like to contribute or report an issue, please create a pull request or file an issue on this repository.

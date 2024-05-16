@@ -2,6 +2,7 @@ import streamlit as st
 import fitz  # PyMuPDF
 import io
 import time
+from streamlit_pdf_viewer import pdf_viewer
 
 
 # Utility functions
@@ -65,7 +66,7 @@ def draw_dotted_lines(page, rect, color, spacing):
 
 
 def process_pdf(input_pdf_bytes, notes_style, notes_text, font_name, color, spacing, position, bg_color, text_color,
-                total_progress, total_files, current_file_index, progress_text, file_counter):
+                include_date, total_progress, total_files, current_file_index, progress_text, file_counter):
     doc = fitz.open("pdf", input_pdf_bytes)
     new_pdf = fitz.open()
     num_pages = len(doc)
@@ -103,19 +104,20 @@ def process_pdf(input_pdf_bytes, notes_style, notes_text, font_name, color, spac
             color=text_color,
             fontname=font_name
         )
-        if font_name == "Courier":
-            date_x_position = notes_rect.x1 - 236
-        elif font_name == "Times-Roman":
-            date_x_position = notes_rect.x1 - 170
-        else:
-            date_x_position = notes_rect.x1 - 185
-        new_page.insert_text(
-            [date_x_position, notes_rect.y0 + 35],
-            "Date: ___ / ___ / ______",
-            fontsize=15,
-            color=text_color,
-            fontname=font_name
-        )
+        if include_date:
+            if font_name == "Courier":
+                date_x_position = notes_rect.x1 - 236
+            elif font_name == "Times-Roman":
+                date_x_position = notes_rect.x1 - 170
+            else:
+                date_x_position = notes_rect.x1 - 185
+            new_page.insert_text(
+                [date_x_position, notes_rect.y0 + 35],
+                "Date: ___ / ___ / ______",
+                fontsize=15,
+                color=text_color,
+                fontname=font_name
+            )
         if notes_style == 'Grid':
             draw_squares(new_page, notes_rect, color, spacing)
         elif notes_style == 'Lined':
@@ -143,9 +145,9 @@ def process_pdf(input_pdf_bytes, notes_style, notes_text, font_name, color, spac
 
 
 # Main UI layout
-st.set_page_config(page_title="PDF with Notes Section 📝",page_icon="📝")
-# Initialize Streamlit application
-st.markdown('<div style="text-align: center;font-size:300%;margin-bottom: 40px"><b>PDF with Notes Section 📝</b></div>', unsafe_allow_html=True)
+st.set_page_config(page_title="PDF with Notes Section 📝", page_icon="📝")
+st.markdown('<div style="text-align: center;font-size:300%;margin-bottom: 40px"><b>PDF with Notes Section 📝</b></div>',
+            unsafe_allow_html=True)
 
 # Display images using HTML
 st.markdown(
@@ -167,9 +169,11 @@ if 'line_color' not in st.session_state:
 if 'text_color' not in st.session_state:
     st.session_state.text_color = '#000000'
 
+
 # Callback to update text color when line color changes
 def update_text_color():
     st.session_state.text_color = st.session_state.line_color
+
 
 col1, col2 = st.columns(2)
 
@@ -177,7 +181,6 @@ with col1:
     st.markdown(
         '<div style="text-align: left;font-size:170%;margin-bottom: 10px"><b>📃 Note Page Style</b></div>',
         unsafe_allow_html=True)
-
     style_choice = st.radio(
         "Style:",
         options=["Grid", "Lined", "Dotted", "Blank"],
@@ -217,6 +220,13 @@ with col1:
             help="Pick a color for the notes text and date.",
             key="text_color"
         )
+    include_date = st.selectbox(
+        "Date Section",
+        ["On", "Off"],
+        index=0,
+        help="Choose whether to include the date field in the notes section."
+    )
+    include_date = include_date == "On"
 
 with col2:
     st.markdown(
@@ -228,13 +238,24 @@ with col2:
         horizontal=True,
         help="Choose where the notes section will be added on the page."
     )
+    # Display images using HTML
+    st.markdown(
+        """
+        <div style="display: flex; justify-content: space-around; margin-top: -5px;margin-left: -15px;padding: 0 0 15px 0px">
+            <img src="https://github.com/ofurkancoban/PDFwithNotesSection/blob/master/img/right.png?raw=true " width="60" style="pointer-events: none;">
+            <img src="https://github.com/ofurkancoban/PDFwithNotesSection/blob/master/img/left.png?raw=true" width="60" style="pointer-events: none;">
+            <img src="https://github.com/ofurkancoban/PDFwithNotesSection/blob/master/img/top.png?raw=true" width="60" style="pointer-events: none;">
+            <img src="https://github.com/ofurkancoban/PDFwithNotesSection/blob/master/img/bottom.png?raw=true" width="60" style="pointer-events: none;">
+        </div>
+        """, unsafe_allow_html=True
+    )
     font_name = st.radio(
         "Font for Notes and Date",
         ["Helvetica", "Courier", "Times-Roman"],
         horizontal=True,
         help="Select the font for the notes and date text."
     )
-    notes_text = st.text_input("Notes Text", "Notes", help="Enter the text to be displayed in the notes section.")
+    notes_text = st.text_input("Title", "Notes", help="Enter the text to be displayed in the notes section.")
 
 bg_color = hex_to_rgb_percent(bg_color_hex)
 color = hex_to_rgb_percent(color_hex)
@@ -245,9 +266,22 @@ st.markdown("<hr>", unsafe_allow_html=True)
 
 # File Upload Section
 st.markdown(
-        '<div style="text-align: center;font-size:170%;margin-bottom: 10px"><b>📤 Upload PDF Files</b></div>',
-        unsafe_allow_html=True)
+    '<div style="text-align: center;font-size:170%;margin-bottom: 10px"><b>📤 Upload PDF Files</b></div>',
+    unsafe_allow_html=True)
 uploaded_files = st.file_uploader("Choose PDF files", type="pdf", accept_multiple_files=True)
+
+# Check if processed_files is in session state, if not initialize it
+if 'processed_files' not in st.session_state:
+    st.session_state.processed_files = []
+
+if 'start_processing' not in st.session_state:
+    st.session_state.start_processing = False
+
+
+def start_processing():
+    st.session_state.start_processing = True
+    st.session_state.processed_files = []
+
 
 if uploaded_files:
     # Total progress bar and text elements
@@ -260,26 +294,49 @@ if uploaded_files:
     st.markdown(
         '<div style="text-align: center;font-size:170%;margin-bottom: 10px"><b>🛠 Process PDFs</b></div>',
         unsafe_allow_html=True)
-    if st.button("🖨️ START 🖨️", use_container_width=True):
-        processed_files = []
+
+    if st.button("🖨️ START 🖨️", use_container_width=True, key="start_button"):
+        start_processing()
         for i, uploaded_file in enumerate(uploaded_files):
-            with st.spinner(f"Processing {uploaded_file.name}..."):
+            with st.spinner(f"Processing {uploaded_file.name}"):
+                binary_pdf = uploaded_file.read()
+                input_pdf_stream = io.BytesIO(binary_pdf)
+                input_pdf_stream.seek(0)  # Reset the stream position
                 output_pdf_stream = process_pdf(
-                    uploaded_file.read(), style_choice, notes_text, font_name, color, spacing, position, bg_color, text_color,
+                    input_pdf_stream.getvalue(), style_choice, notes_text, font_name, color, spacing, position,
+                    bg_color, text_color, include_date,
                     total_progress, total_files, i, progress_text, file_counter
                 )
-                processed_files.append((uploaded_file.name, output_pdf_stream))
 
-                # Display download button for the completed file
-                col1, col2 = st.columns([3, 1])
-                with col1:
-                    st.write(f"➔ {i + 1} -  {uploaded_file.name}   ✅")
-                with col2:
-                    st.download_button(
-                        label="Download",
-                        data=output_pdf_stream,
-                        file_name=f"{uploaded_file.name}_withNotes.pdf",
-                        mime="application/pdf",
-                        use_container_width=True,
-                        key=f"download_{i}"  # Ensure unique keys for each download button
-                    )
+                # Save the output stream to a separate variable for each file
+                output_stream = output_pdf_stream.getvalue()
+                st.session_state.processed_files.append(
+                    (uploaded_file.name, output_stream, f"download_{i}_{time.time()}"))  # Add unique key
+
+        # After processing all files, display them
+        st.markdown("<hr>", unsafe_allow_html=True)
+        st.markdown(
+            '<div style="text-align: center;font-size:170%;margin-bottom: 10px"><b>🔎 View Processed PDFs</b></div>',
+            unsafe_allow_html=True)
+
+for j, (file_name, output_stream, unique_key) in enumerate(st.session_state.processed_files):
+    st.markdown("<hr>", unsafe_allow_html=True)
+    st.markdown(
+        f'<div style="text-align: center;font-size:170%;margin-bottom: 10px"><b>🔎 View PDF</b></div>',
+        unsafe_allow_html=True)
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.write(f"➔ {j + 1} -  {file_name}   ✅")
+    with col2:
+        st.download_button(
+            label="Download",
+            data=output_stream,
+            file_name=f"{file_name}_withNotes.pdf",
+            mime="application/pdf",
+            use_container_width=True,
+            key=f"download_{j}_{time.time()}"
+        )
+
+    # Display the output PDF
+    pdf_viewer(output_stream, width=1200, height=600, pages_vertical_spacing=2, annotation_outline_size=2,
+               pages_to_render=[])
