@@ -2,6 +2,8 @@
   <img src="https://github.com/ofurkancoban/PDFwithNotesSection/blob/master/img/img.png" alt="xml2csv" style="width: 100%; height: auto;">
 </p>
 
+**Check this out: https://pdfwithnotes.streamlit.app/**
+
 **PDF with Notes Section**
 A simple web-based application to add notes sections to PDF files using Streamlit.
 
@@ -15,6 +17,7 @@ This project allows users to upload PDF files, select the style of the notes sec
 * Select from four styles: grid, lined, dotted, or blank
 * Choose the font and color scheme
 * Enter the text to be displayed in the notes section
+* View the processed PDF files
 * Download the processed PDF files
 
 **Getting Started**
