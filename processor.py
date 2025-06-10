@@ -63,20 +63,33 @@ def fix_metadata_with_pikepdf(input_path, output_path):
         new_pdf.Root.Info = pikepdf.Dictionary()
         new_pdf.save(output_path)
 
+
 def apply_rotation_if_needed(orig_path, norm_path, out_path):
     orig_reader = PdfReader(orig_path)
     reader = PdfReader(norm_path)
     writer = PdfWriter()
+
     for op, p in zip(orig_reader.pages, reader.pages):
-        if is_metadata_problematic(op):
-            width = float(p.mediabox.width)
-            height = float(p.mediabox.height)
-            tf = Transformation().rotate(-90).translate(tx=0, ty=width)
+        rotate = op.get('/Rotate', 0)
+
+        if rotate == 90:
+            tf = Transformation().rotate(-90).translate(tx=0, ty=float(p.mediabox.width))
             p.add_transformation(tf)
-            p.mediabox.upper_right = (height, width)
-            p.cropbox.upper_right = (height, width)
-            p.rotate = 0
+            p.mediabox.upper_right = (float(p.mediabox.height), float(p.mediabox.width))
+            p.cropbox.upper_right = (float(p.cropbox.height), float(p.cropbox.width))
+        elif rotate == 180:
+            tf = Transformation().rotate(-180).translate(tx=float(p.mediabox.width), ty=float(p.mediabox.height))
+            p.add_transformation(tf)
+        elif rotate == 270:
+            tf = Transformation().rotate(-270).translate(tx=float(p.mediabox.height), ty=0)
+            p.add_transformation(tf)
+            p.mediabox.upper_right = (float(p.mediabox.height), float(p.mediabox.width))
+            p.cropbox.upper_right = (float(p.cropbox.height), float(p.cropbox.width))
+
+        # Rotate bayrağını sıfırla (görünümü normalize et)
+        p.rotate = 0
         writer.add_page(p)
+
     with open(out_path, "wb") as f:
         writer.write(f)
 
