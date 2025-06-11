@@ -2,7 +2,7 @@ import streamlit as st
 import io
 import time
 from streamlit_pdf_viewer import pdf_viewer
-from processor import process_pdf
+from processor import process_pdf, hex_to_rgb_percent
 
 # Streamlit page setup
 st.set_page_config(page_title="PDF with Notes Section 📝", page_icon="📝")

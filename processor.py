@@ -5,6 +5,11 @@ from pypdf import PdfReader, PdfWriter, Transformation
 import pikepdf
 import io
 
+# --- Color Converter ---
+def hex_to_rgb_percent(hex_color):
+    hex_color = hex_color.lstrip('#')
+    return tuple(int(hex_color[i:i + 2], 16) / 255.0 for i in range(0, 6, 2))
+
 # --- Drawing Utilities ---
 def draw_lines(page, rect, color, spacing):
     y = rect.y0 + spacing * 3
